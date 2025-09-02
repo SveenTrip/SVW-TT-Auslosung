@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SV Westerbeck TT Auslosung</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --bg-soft:#fafafa;
+      --text:#1f1f1f;
+      --muted:#6b7280;
+      --primary:#e53935; /* modernes Rot */
+      --primary-600:#d32f2f;
+      --primary-700:#c62828;
+      --ring: rgba(229,57,53,.25);
+      --border:#e5e7eb;
+      --ok:#16a34a;
+      --warn:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text); background:var(--bg-soft);
+    }
+    header{
+      background:linear-gradient(90deg,var(--primary),var(--primary-700));
+      color:#fff; padding:18px 20px; font-weight:700; letter-spacing:.3px;
+      box-shadow:0 2px 10px rgba(0,0,0,.08);
+    }
+    header .title{display:flex; align-items:center; gap:12px;}
+    header svg{width:28px; height:28px; opacity:.9}
+
+    .container{max-width:1100px; margin:24px auto; padding:0 16px;}
+    .grid{display:grid; grid-template-columns: 1fr 1fr; gap:18px;}
+    @media (max-width: 880px){.grid{grid-template-columns:1fr}}
+
+    .card{
+      background:var(--bg); border:1px solid var(--border); border-radius:16px;
+      padding:16px; box-shadow:0 1px 6px rgba(0,0,0,.04);
+    }
+    .card h2{margin:0 0 12px; font-size:18px}
+    .muted{color:var(--muted)}
+
+    /* Inputs */
+    .row{display:flex; gap:8px;}
+    input[type="text"], .inline-edit{
+      flex:1; padding:10px 12px; border:1px solid var(--border); border-radius:12px;
+      background:#fff; outline:none; transition: box-shadow .15s,border-color .15s;
+    }
+    input[type="text"]:focus, .inline-edit:focus{border-color:var(--primary); box-shadow:0 0 0 4px var(--ring)}
+
+    .btn{
+      border:none; border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer; user-select:none;
+      transition: transform .05s ease, filter .15s ease, background .15s ease;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btn-primary{background:var(--primary); color:#fff}
+    .btn-primary:hover{filter:brightness(1.03)}
+    .btn-outline{background:#fff; color:var(--primary); border:1px solid var(--primary)}
+
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px; margin-top:12px}
+
+    /* Player list */
+    .list{margin:12px 0 0; padding:0; list-style:none;}
+    .player{
+      display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:10px;
+      padding:10px 12px; border:1px solid var(--border); border-radius:12px; margin-bottom:8px; background:#fff;
+    }
+    .player.absent{opacity:.6; background:#fcfcfc}
+
+    /* Pretty checkbox */
+    .check-wrap{display:inline-flex; align-items:center; justify-content:center;}
+    .check{
+      --s:20px; width:var(--s); height:var(--s); border:2px solid var(--primary); border-radius:6px; display:inline-grid; place-items:center; cursor:pointer;
+    }
+    .check input{appearance:none; width:0; height:0; position:absolute}
+    .check svg{width:16px; height:16px; opacity:0; transition:opacity .12s}
+    .check input:checked + svg{opacity:1; color:var(--primary)}
+
+    .name{font-weight:600}
+    .name small{font-weight:500; color:var(--muted)}
+
+    .actions{display:flex; gap:6px}
+    .icon-btn{
+      width:36px; height:36px; display:inline-grid; place-items:center; border-radius:10px; border:1px solid var(--border); background:#fff; cursor:pointer;
+    }
+    .icon-btn:hover{box-shadow:0 0 0 4px var(--ring)}
+    .icon-btn svg{width:18px; height:18px}
+    .edit-btn{padding:0 10px; width:auto; gap:8px; display:inline-flex; align-items:center}
+
+    .inline-edit{width:100%}
+
+    /* Pairings */
+    .pairings{margin-top:12px; border-top:1px dashed var(--border); padding-top:12px}
+    .line{padding:10px 12px; border:1px solid var(--border); border-radius:12px; margin-bottom:8px; background:#fff; display:flex; align-items:center; gap:10px}
+    .badge{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
+    .vs{font-weight:800; letter-spacing:.4px}
+    .team{font-weight:700}
+
+    .counts{margin-top:6px; font-size:14px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10.5 3a1 1 0 0 0-1 1v5.086l-2.293-2.293a1 1 0 1 0-1.414 1.414L8.586 11 5.793 13.793a1 1 0 0 0 1.414 1.414L9.5 12.914V18a1 1 0 1 0 2 0v-5.086l2.293 2.293a1 1 0 0 0 1.414-1.414L12.414 11l2.793-2.793a1 1 0 0 0-1.414-1.414L11.5 9.086V4a1 1 0 0 0-1-1Z"/></svg>
+      <div>SV Westerbeck TT Auslosung</div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="grid">
+      <section class="card" id="manage">
+        <h2>Spieler verwalten</h2>
+        <div class="row">
+          <input id="nameInput" type="text" placeholder="Name eingeben und hinzufügen…" />
+          <button id="addBtn" class="btn btn-primary">Hinzufügen</button>
+        </div>
+        <div class="counts muted" id="counts"></div>
+        <ul class="list" id="playerList"></ul>
+      </section>
+
+      <section class="card" id="draw">
+        <h2>Auslosung</h2>
+        <div class="toolbar">
+          <button id="draw1v1" class="btn btn-primary">Alle 1&nbsp;vs&nbsp;1 auslosen</button>
+          <button id="draw2v2" class="btn btn-outline">Alle 2&nbsp;vs&nbsp;2 auslosen</button>
+        </div>
+        <div class="pairings" id="pairings"></div>
+      </section>
+    </div>
+  </div>
+
+  <template id="icons">
+    <svg data-icon="trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+    <svg data-icon="edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+    <svg data-icon="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <svg data-icon="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <svg data-icon="tick" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+  </template>
+
+  <script>
+    const STORAGE_KEY = 'svw_tt_players_v1';
+
+    /** @type {{id:string,name:string,present:boolean}[]} */
+    let players = [];
+
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => document.querySelectorAll(sel);
+
+    const nameInput = $('#nameInput');
+    const addBtn = $('#addBtn');
+    const playerList = $('#playerList');
+    const counts = $('#counts');
+    const pairingsEl = $('#pairings');
+    const draw1v1Btn = $('#draw1v1');
+    const draw2v2Btn = $('#draw2v2');
+
+    function uid(){
+      if (crypto?.randomUUID) return crypto.randomUUID();
+      return 'id-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    }
+
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(players)); }
+    function load(){ players = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+
+    function renderCounts(){
+      const total = players.length;
+      const present = players.filter(p=>p.present).length;
+      counts.textContent = `Anwesend: ${present} / Gesamt: ${total}`;
+    }
+
+    function icon(name){
+      const tpl = document.getElementById('icons');
+      const svg = tpl.content.querySelector(`[data-icon="${name}"]`).cloneNode(true);
+      return svg;
+    }
+
+    function renderPlayers(){
+      // Sort: present first, then name
+      const sorted = [...players].sort((a,b)=> (b.present - a.present) || a.name.localeCompare(b.name, 'de', {sensitivity:'base'}));
+      playerList.innerHTML = '';
+      for(const p of sorted){
+        const li = document.createElement('li');
+        li.className = 'player' + (p.present ? '' : ' absent');
+        li.dataset.id = p.id;
+
+        const checkWrap = document.createElement('label');
+        checkWrap.className = 'check-wrap';
+        const check = document.createElement('label');
+        check.className = 'check';
+        const inp = document.createElement('input'); inp.type='checkbox'; inp.checked = p.present; inp.setAttribute('aria-label','Anwesend');
+        const tick = icon('tick');
+        check.appendChild(inp); check.appendChild(tick);
+        checkWrap.appendChild(check);
+
+        const name = document.createElement('div');
+        name.className = 'name'; name.textContent = p.name;
+
+        const actions = document.createElement('div'); actions.className = 'actions';
+        const editBtn = document.createElement('button'); editBtn.className = 'icon-btn edit-btn'; editBtn.title = 'Bearbeiten'; editBtn.appendChild(icon('edit')); const editTxt = document.createElement('span'); editTxt.textContent = 'Bearbeiten'; editBtn.appendChild(editTxt);
+        const delBtn = document.createElement('button'); delBtn.className = 'icon-btn'; delBtn.title='Löschen'; delBtn.setAttribute('data-action','delete'); delBtn.appendChild(icon('trash'));
+        // mark for delegation
+        editBtn.setAttribute('data-action','edit');
+
+        actions.appendChild(editBtn); actions.appendChild(delBtn);
+
+        li.appendChild(checkWrap); li.appendChild(name); li.appendChild(actions);
+        playerList.appendChild(li);
+      }
+      renderCounts();
+    }
+
+    function addPlayer(name){
+      const n = name.trim();
+      if(!n) return;
+      players.push({id:uid(), name:n, present:true});
+      save(); renderPlayers();
+      nameInput.value=''; nameInput.focus();
+    }
+
+    function updatePresence(id, present){
+      const p = players.find(x=>x.id===id); if(!p) return; p.present = present; save(); renderPlayers();
+    }
+
+    function renamePlayer(id, newName){
+      const p = players.find(x=>x.id===id); if(!p) return; p.name = newName.trim() || p.name; save(); renderPlayers();
+    }
+
+    function deletePlayer(id){
+      players = players.filter(p=>p.id!==id); save(); renderPlayers();
+    }
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+      return a;
+    }
+
+    function renderPairLines(lines){
+      pairingsEl.innerHTML = '';
+      if(!lines.length){
+        const div = document.createElement('div'); div.className='muted'; div.textContent = 'Keine Paarungen.'; pairingsEl.appendChild(div); return;
+      }
+      for(const item of lines){
+        const line = document.createElement('div'); line.className='line';
+        if(item.type==='1v1'){
+          const t = document.createElement('div'); t.className='team'; t.textContent = `${item.a} `;
+          const vs = document.createElement('div'); vs.className='vs'; vs.textContent = 'vs';
+          const t2 = document.createElement('div'); t2.className='team'; t2.textContent = ` ${item.b}`;
+          line.append(t, vs, t2);
+        } else if(item.type==='2v2'){
+          const left = document.createElement('div'); left.className='team'; left.textContent = `${item.a} & ${item.b}`;
+          const vs = document.createElement('div'); vs.className='vs'; vs.textContent = 'vs';
+          const right = document.createElement('div'); right.className='team'; right.textContent = `${item.c} & ${item.d}`;
+          line.append(left, vs, right);
+        } else if(item.type==='pause'){
+          const badge = document.createElement('span'); badge.className='badge'; badge.textContent='Pause';
+          const who = document.createElement('div'); who.className='team'; who.textContent = item.a;
+          line.append(badge, who);
+        }
+        pairingsEl.appendChild(line);
+      }
+    }
+
+    // 1 vs 1: alle Anwesenden paaren, 1 übrig -> Pause
+    function draw1v1All(){
+      const present = players.filter(p=>p.present).map(p=>p.name);
+      const s = shuffle(present);
+      const lines = [];
+      for(let i=0;i<s.length-1;i+=2){ lines.push({type:'1v1', a:s[i], b:s[i+1]}); }
+      if(s.length % 2 === 1){ lines.push({type:'pause', a:s[s.length-1]}); }
+      if(!present.length){ lines.push(); }
+      renderPairLines(lines);
+    }
+
+    // 2 vs 2: Gruppen à 4, Rest-Logik:
+    // Rest 2 -> 1v1
+    // Rest 1 -> Pause
+    // Rest 3 -> 1v1 + 1 Pause (robuste Zusatzlogik)
+    function draw2v2All(){
+      const present = players.filter(p=>p.present).map(p=>p.name);
+      const s = shuffle(present);
+      const lines = [];
+      let i=0;
+      while(i+3 < s.length){
+        lines.push({type:'2v2', a:s[i], b:s[i+1], c:s[i+2], d:s[i+3]});
+        i+=4;
+      }
+      const rest = s.length - i;
+      if(rest === 3){
+        lines.push({type:'1v1', a:s[i], b:s[i+1]});
+        lines.push({type:'pause', a:s[i+2]});
+      } else if(rest === 2){
+        lines.push({type:'1v1', a:s[i], b:s[i+1]});
+      } else if(rest === 1){
+        lines.push({type:'pause', a:s[i]});
+      }
+      renderPairLines(lines);
+    }
+
+    // Event wiring
+    addBtn.addEventListener('click', ()=> addPlayer(nameInput.value));
+    nameInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') addPlayer(nameInput.value); });
+
+    // Delegation for list interactions
+    playerList.addEventListener('click', (e)=>{
+      const li = e.target.closest('.player'); if(!li) return; const id = li.dataset.id;
+      const actionBtn = e.target.closest('[data-action]');
+      if(actionBtn){
+        const action = actionBtn.getAttribute('data-action');
+        if(action==='edit'){
+          // enter inline edit mode
+          const nameEl = li.querySelector('.name');
+          const old = nameEl.textContent;
+          const input = document.createElement('input'); input.className='inline-edit'; input.type='text'; input.value = old;
+          nameEl.replaceWith(input); input.focus(); input.select();
+
+          // swap edit button -> save, and insert cancel
+          const actions = li.querySelector('.actions');
+          const editBtn = actions.querySelector('[data-action="edit"]');
+          const cancelBtn = document.createElement('button'); cancelBtn.className = 'icon-btn'; cancelBtn.title='Abbrechen'; cancelBtn.setAttribute('data-action','cancel'); cancelBtn.appendChild(icon('x'));
+          const saveBtn = document.createElement('button'); saveBtn.className = 'icon-btn'; saveBtn.title='Speichern'; saveBtn.setAttribute('data-action','save'); saveBtn.appendChild(icon('check'));
+          actions.innerHTML='';
+          actions.appendChild(saveBtn); actions.appendChild(cancelBtn);
+
+          const commit = ()=>{ renamePlayer(id, input.value); };
+          const cancel = ()=>{ renderPlayers(); };
+          input.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter') commit(); if(ev.key==='Escape') cancel(); });
+          actions.addEventListener('click', (ev)=>{
+            const btn = ev.target.closest('[data-action]'); if(!btn) return;
+            const a = btn.getAttribute('data-action');
+            if(a==='save') commit();
+            if(a==='cancel') cancel();
+          }, {once:true});
+        }
+      }
+
+      if(e.target.closest('[data-action="delete"]')){
+        deletePlayer(id);
+      }
+    });
+
+    playerList.addEventListener('change', (e)=>{
+      const li = e.target.closest('.player'); if(!li) return;
+      if(e.target.matches('.check input[type="checkbox"]')){
+        updatePresence(li.dataset.id, e.target.checked);
+      }
+    });
+
+    draw1v1Btn.addEventListener('click', draw1v1All);
+    draw2v2Btn.addEventListener('click', draw2v2All);
+
+    // Init
+    load(); renderPlayers();
+  </script>
+</body>
+</html>
