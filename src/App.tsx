@@ -330,7 +330,7 @@ export default function App() {
   if (!ready || !activeTraining) return <div className="splash"><div className="brand-mark"><CircleDot /></div><strong>Auslosung wird vorbereitet …</strong></div>;
 
   return <div className="app-shell">
-    <header className="topbar"><button className="brand" onClick={() => setTab('home')}><img className="club-logo" src="/sv-westerbeck-wappen.png" alt="Wappen des SV Westerbeck" /><span><strong>SVW Schüttel App</strong><small>SVW - Olé olé!</small></span></button><button className="icon-button settings-button" onClick={() => setSettingsOpen(true)} aria-label="Einstellungen öffnen"><Settings /></button></header>
+    <header className="topbar"><button className="brand" onClick={() => setTab('home')}><img className="club-logo" src={`${import.meta.env.BASE_URL}sv-westerbeck-wappen.png`} alt="Wappen des SV Westerbeck" /><span><strong>SVW Schüttel App</strong><small>SVW - Olé olé!</small></span></button><button className="icon-button settings-button" onClick={() => setSettingsOpen(true)} aria-label="Einstellungen öffnen"><Settings /></button></header>
     <main>
       {tab === 'home' && <HomeView members={members} training={activeTraining} rounds={activeRounds} goMembers={() => setTab('members')} show={toast.show} />}
       {tab === 'members' && <MembersView members={members} show={toast.show} />}
