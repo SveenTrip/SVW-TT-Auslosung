@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon-180x180.png'],
+      includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon-svw-180.png'],
       manifest: {
         name: 'Tischtennis Auslosung',
         short_name: 'TT Auslosung',
@@ -22,9 +22,9 @@ export default defineConfig({
         lang: 'de-DE',
         categories: ['sports', 'utilities'],
         icons: [
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          { src: 'pwa-svw-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-svw-512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'maskable-svw-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       workbox: {
