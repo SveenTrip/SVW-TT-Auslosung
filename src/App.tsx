@@ -117,16 +117,18 @@ function HomeView({ members, training, rounds, goMembers, show }: HomeViewProps)
   };
 
   return <div className="view-stack">
-    <section className="welcome-card">
-      <div>
-        <span className="eyebrow">SV Westerbeck · Tischtennis</span>
-        <h1>Die nächste Runde<br />kann starten.</h1>
-        <p>{formatDate(training.startedAt)} <span aria-hidden="true">·</span> {rounds.length} {rounds.length === 1 ? 'Runde' : 'Runden'} gespielt</p>
+    <section className="training-summary" aria-label="Aktuelles Training">
+      <div className="training-summary-title">
+        <span className="eyebrow">Aktuelles Training</span>
+        <h1>Trainingsabend</h1>
+        <p>Gestartet am {formatDate(training.startedAt)}</p>
       </div>
-      <div className="attendance-orb"><strong>{present.length}</strong><span>anwesend</span></div>
+      <div className="training-stats">
+        <div className="training-stat"><strong>{present.length}<small> / {members.length}</small></strong><span>Anwesend</span></div>
+        <div className="training-stat"><strong>{rounds.length}</strong><span>{rounds.length === 1 ? 'Runde' : 'Runden'} gespielt</span></div>
+      </div>
+      <button className="summary-attendance" onClick={goMembers}><UserCheck /><span>Anwesenheit bearbeiten</span><ChevronRight /></button>
     </section>
-
-    <button className="attendance-link" onClick={goMembers}><UserCheck /><span><strong>Anwesenheit bearbeiten</strong><small>{members.length} Mitglieder insgesamt</small></span><ChevronRight /></button>
 
     <section className="draw-section" aria-label="Auslosung starten">
       <div className="draw-section-heading"><div><span className="eyebrow">Los geht’s</span><h2>Neue Auslosung</h2></div><p>Wähle den Spielmodus für Runde {rounds.length + 1}.</p></div>
