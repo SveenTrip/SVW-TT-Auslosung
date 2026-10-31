@@ -102,7 +102,7 @@ function HomeView({ members, training, rounds, goMembers, show }: HomeViewProps)
       const result = requestedMode === 'single' ? drawSingles(present, rounds) : drawDoubles(present, rounds);
       if (!assertUniqueAssignment(result)) throw new Error('Die Auslosung konnte nicht erstellt werden.');
       setDraft(result); setMode(requestedMode);
-      window.setTimeout(() => document.getElementById('draw-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      window.setTimeout(() => document.getElementById('draw-result')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' }), 50);
     } catch (error) { show((error as Error).message); }
   };
 
@@ -119,18 +119,21 @@ function HomeView({ members, training, rounds, goMembers, show }: HomeViewProps)
   return <div className="view-stack">
     <section className="welcome-card">
       <div>
-        <span className="eyebrow">Aktuelles Training</span>
-        <h1>Bereit für die nächste Runde?</h1>
-        <p>{formatDate(training.startedAt)} · {rounds.length} {rounds.length === 1 ? 'Runde' : 'Runden'} gespielt</p>
+        <span className="eyebrow">SV Westerbeck · Tischtennis</span>
+        <h1>Die nächste Runde<br />kann starten.</h1>
+        <p>{formatDate(training.startedAt)} <span aria-hidden="true">·</span> {rounds.length} {rounds.length === 1 ? 'Runde' : 'Runden'} gespielt</p>
       </div>
       <div className="attendance-orb"><strong>{present.length}</strong><span>anwesend</span></div>
     </section>
 
     <button className="attendance-link" onClick={goMembers}><UserCheck /><span><strong>Anwesenheit bearbeiten</strong><small>{members.length} Mitglieder insgesamt</small></span><ChevronRight /></button>
 
-    <section className="draw-actions" aria-label="Auslosung starten">
-      <button className="draw-button primary-draw" onClick={() => makeDraw('single')}><span className="draw-icon"><Shuffle /></span><strong>Einzel auslosen</strong></button>
-      <button className="draw-button secondary-draw" onClick={() => makeDraw('double')}><span className="draw-icon"><CircleDot /></span><strong>Doppel auslosen</strong></button>
+    <section className="draw-section" aria-label="Auslosung starten">
+      <div className="draw-section-heading"><div><span className="eyebrow">Los geht’s</span><h2>Neue Auslosung</h2></div><p>Wähle den Spielmodus für Runde {rounds.length + 1}.</p></div>
+      <div className="draw-actions">
+        <button className="draw-button primary-draw" onClick={() => makeDraw('single')}><span className="draw-icon"><Shuffle /></span><span className="draw-copy"><strong>Einzel auslosen</strong><small>Spieler gegen Spieler</small></span><ChevronRight className="draw-arrow" /></button>
+        <button className="draw-button secondary-draw" onClick={() => makeDraw('double')}><span className="draw-icon"><CircleDot /></span><span className="draw-copy"><strong>Doppel auslosen</strong><small>Team gegen Team</small></span><ChevronRight className="draw-arrow" /></button>
+      </div>
     </section>
 
     {draft && <section className="result-section" id="draw-result">
